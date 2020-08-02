@@ -12,13 +12,13 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="pin-generator half-width">
-                    <input class="form-control" type="text">
-                    <button class="generate-btn">Generate Pin</button>
+                    <input id="input-pin"class="form-control" type="text">
+                    <button id="pin-generate"class="generate-btn">Generate Pin</button>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="input-section half-width">
-                    <input class="form-control" type="text">
+                    <input class="form-control" type="text" id="screen">
                     <div class="numbers">
                         <div class="calc-body">
                             <div class="calc-button-row">
@@ -37,22 +37,106 @@
                               <div class="button">3</div>
                             </div>
                             <div class="calc-button-row">
-                                <div class="button"><</div>
+                                <div class="button"> < </div>
                                 <div class="button">0</div>
                                 <div class="button">C</div>
                             </div>
                             <div>
-                                <button type="submit" class="submit-btn">Submit</button>
-                                <p class="action-left">3 try left</p>
+                                <button type="submit" id="button-submit"class="submit-btn">Submit</button>
+                                <p id="try"class="action-left"><span id="try-attempt"> 3 </span> try left</p>
                             </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="notify-section">
-            <p class="notify">❌ Pin Didn't Match, Please try again</p>
-            <p class="notify">✅ Pin Matched... Secret door is opening for you</p>
+            <p id="wrong"class="notify">❌ Pin Didn't Match, Please try again</p>
+            <p id="right"class="notify">✅ Pin Matched... Secret door is opening for you</p>
         </div>
     </div>
+
+     <script>
+         var temp;
+         function random(){
+       var randomNumber = (Math.random()*10000).toFixed(0);
+             var input = document.getElementById('input-pin');
+             if(randomNumber>=1000 && randomNumber<=9999)
+             {
+                 input.value = randomNumber;
+               temp = randomNumber;
+             }
+         }
+         //random NUmber
+         document.getElementById('pin-generate').addEventListener('click',random);
+
+         //calculator
+
+         let screen = document.getElementById('screen');
+var buttons = document.getElementsByClassName('button');
+let screenValue = '';
+for (item of buttons) {
+    item.addEventListener('click', (e) => {
+       var buttonText = e.target.innerText;
+        console.log('Button text is ', buttonText);
+        if (buttonText == 'C') {
+            screenValue = "";
+            screen.value = screenValue;
+        }
+        else if (buttonText == '=') {
+            screen.value = eval(screenValue);
+        }
+        else if(buttonText=='<')
+        {
+            screenValue = screen.value;
+            screenValue = screenValue.substring(0,screenValue.length - 1);
+            screen.value = screenValue;
+        }
+        else {
+            screenValue += buttonText;
+            screen.value = screenValue;
+        }
+
+    })
+}
+  // submit button
+
+   document.getElementById('button-submit').addEventListener('click',function(event){
+       var submitValue = document.getElementById('screen').value;
+       if(submitValue==temp)
+       {
+         var verify = document.getElementById('right');
+         var verify1 = document.getElementById('wrong');
+
+        verify1.style.display = 'none';
+         verify.style.display = 'block';
+       }
+       else
+       {
+
+           var verify= document.getElementById('wrong');
+           verify.style.display = 'block';
+           var attempt = document.getElementById('try-attempt').innerText;
+           var attemptNo= parseInt(attempt);
+           console.log(attemptNo);
+           if(attemptNo>0)
+           {
+               attemptNo--;
+               console.log(attemptNo);
+               var tryAttempt = document.getElementById('try-attempt');
+               tryAttempt.style.display='none';
+               tryAttempt.innerText = attemptNo;
+
+               document.getElementById('try-attempt').style.display='inline';
+
+               if(attemptNo==0)
+               document.getElementById('button-submit').disabled = true;
+           }
+          
+
+       }
+   })
+
+     </script>
+
 </body>
 </html>
